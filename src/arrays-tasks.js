@@ -172,7 +172,7 @@ function isValueEqualsIndex(arr) {
  *    insertItem([ 1, 'b', 'c'], 'x', 0) => [ 'x', 1, 'b', 'c' ]
  */
 function insertItem(arr, item, index) {
-  return [...arr.slice(0, index), item, ...arr.slice(index)];
+  arr.splice(index, 0, item);
 }
 
 /**
@@ -204,7 +204,7 @@ function getHead(arr, n) {
  *    getTail([ 'a', 'b', 'c', 'd'], 0) => []
  */
 function getTail(arr, n) {
-  return arr.slice(-n);
+  return n === 0 ? [] : arr.slice(-n);
 }
 
 /**
@@ -493,19 +493,16 @@ function findCommonElements(arr1, arr2) {
  *    findLongestIncreasingSubsequence([50, 3, 10, 7, 40, 80]) => longest is [7, 40, 80] => 3
  */
 function findLongestIncreasingSubsequence(nums) {
-  let maxLength = 0;
-  let currentLength = 1;
-
-  for (let i = 1; i < nums.length; i += 1) {
-    if (nums[i] > nums[i - 1]) {
-      currentLength += 1;
+  if (nums.length === 0) return 0;
+  const lengths = nums.reduce((acc, num, i) => {
+    if (i === 0) {
+      acc.push(1);
     } else {
-      maxLength = Math.max(maxLength, currentLength);
-      currentLength = 1;
+      acc.push(num > nums[i - 1] ? acc[i - 1] + 1 : 1);
     }
-  }
-
-  return Math.max(maxLength, currentLength);
+    return acc;
+  }, []);
+  return Math.max(...lengths);
 }
 
 /**
